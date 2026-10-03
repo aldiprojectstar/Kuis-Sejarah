@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Secret Mission Okta</title>
+<link href="https://fonts.googleapis.com/css2?family=Chewy&family=Quicksand:wght@600&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box}
+body{
+margin:0;height:100vh;overflow:hidden;
+display:flex;align-items:center;justify-content:center;
+background:linear-gradient(135deg,#211542,#8d3d91,#ff9bc9);
+color:white;font-family:Quicksand,sans-serif
+}
+.container{width:95%;max-width:650px;text-align:center}
+.chewy{font-family:Chewy,cursive}
+.panel{background:#ffffff18;padding:30px;border-radius:30px;backdrop-filter:blur(10px)}
+button{padding:14px 25px;border:0;border-radius:20px;background:#ff70b5;color:white;font-size:18px;margin:8px}
+.option{display:block;width:90%;margin:10px auto;background:#45305d}
+.progress{height:15px;background:#222;border-radius:20px;overflow:hidden}
+.bar{height:100%;width:0;background:#ffd166}
+#decrypt,#reward,#final{display:none}
+.gift{font-size:100px;cursor:pointer;animation:bounce 1s infinite}
+@keyframes bounce{50%{transform:translateY(-15px)}}
+.finalTitle{font-family:Chewy;font-size:65px;line-height:1.1;color:#fff4fb;text-shadow:0 5px 0 #ff5da8,0 0 25px white}
+.finalSub{font-family:Chewy;font-size:38px;color:#ffe1ef}
+.particle{position:fixed;pointer-events:none;animation:explode 3s forwards}
+@keyframes explode{to{transform:translate(var(--x),var(--y)) rotate(720deg);opacity:0}}
+.fire{position:fixed;width:8px;height:8px;border-radius:50%;background:white;box-shadow:0 0 20px white,30px 0 #ffd166,-30px 0 #ff70b5,0 30px #fff,0 -30px #ff9bc9;animation:boom 1s forwards}
+@keyframes boom{to{transform:scale(5);opacity:0}}
+</style>
+</head>
+<body>
+<div class="container">
+<div id="game">
+<h1 class="chewy">🔒 SECRET MISSION</h1>
+<div class="panel">
+<div id="stars">☆</div>
+<div class="progress"><div class="bar" id="bar"></div></div>
+<h2 id="question">Ada misi rahasia...</h2>
+<div id="answers"></div>
+<button id="start">START GAME</button>
+</div>
+</div>
+
+<div id="decrypt">
+<h1 class="chewy">MISSION COMPLETE ✨</h1>
+<h2>Membuka hadiah...</h2>
+<h1 id="percent">0%</h1>
+</div>
+
+<div id="reward">
+<h1 class="chewy">REWARD UNLOCKED</h1>
+<div class="gift" id="gift">🎁</div>
+<p>Klik hadiah</p>
+</div>
+
+<div id="final"></div>
+</div>
+
+<script>
+const qs=[
+["Indonesia merdeka pada tanggal?",["17 Agustus 1945","20 Mei 1945","10 November 1945"],"17 Agustus 1945"],
+["Pembaca Proklamasi?",["Soekarno","Hatta","Sudirman"],"Soekarno"],
+["Proklamasi dibacakan di kota?",["Jakarta","Bandung","Surabaya"],"Jakarta"],
+["Wakil presiden pertama?",["Mohammad Hatta","Habibie","Adam Malik"],"Mohammad Hatta"],
+["Warna bendera Indonesia?",["Merah Putih","Biru Putih","Hijau"],"Merah Putih"],
+["Lagu kebangsaan?",["Indonesia Raya","Hari Merdeka","Garuda"],"Indonesia Raya"],
+["17 Agustus adalah hari?",["Kemerdekaan Indonesia","Pahlawan","Pendidikan"],"Kemerdekaan Indonesia"],
+["Pendamping Soekarno?",["Mohammad Hatta","Kartini","Sudirman"],"Mohammad Hatta"],
+["Tempat proklamasi?",["Pegangsaan Timur","Monas","Istana"],"Pegangsaan Timur"],
+["Pengetik naskah?",["Sayuti Melik","Soepomo","Fatmawati"],"Sayuti Melik"]
+];
+let i=0,s=0;
+start.onclick=()=>{start.style.display="none";show()};
+function show(){
+let q=qs[i];question.innerHTML="LEVEL "+(i+1)+"/10<br><br>"+q[0];answers.innerHTML="";
+q[1].forEach(a=>{let b=document.createElement("button");b.className="option";b.innerHTML=a;b.onclick=()=>check(a);answers.appendChild(b)})
+bar.style.width=i*10+"%"
+}
+function check(a){
+if(a==qs[i][2]){s++;stars.innerHTML="★".repeat(s);i++;i<10?show():finish()}
+}
+function finish(){
+game.style.display="none";decrypt.style.display="block";let n=0;
+let t=setInterval(()=>{n+=2;percent.innerHTML=n+"%";if(n>=100){clearInterval(t);decrypt.style.display="none";reward.style.display="block"}},50)
+}
+gift.onclick=()=>{
+reward.style.display="none";final.style.display="block";
+final.innerHTML='<div class="finalTitle">🎂 HBD TAAA<br>🥳🎈✨💖</div><div class="finalSub">Happy terus yaa ✨</div>';
+effects();music()
+}
+function effects(){
+setInterval(()=>{
+for(let i=0;i<30;i++){let p=document.createElement("div");p.className="particle";p.innerHTML=["❤️","✨","⭐","🎉","🎊"][Math.floor(Math.random()*5)];p.style.left="50%";p.style.top="50%";p.style.setProperty("--x",(Math.random()-.5)*innerWidth*1.5+"px");p.style.setProperty("--y",(Math.random()-.5)*innerHeight*1.5+"px");document.body.appendChild(p);setTimeout(()=>p.remove(),3000)}
+for(let j=0;j<3;j++)setTimeout(()=>{let f=document.createElement("div");f.className="fire";f.style.left=Math.random()*80+10+"vw";f.style.top=Math.random()*60+10+"vh";document.body.appendChild(f);setTimeout(()=>f.remove(),1000)},j*400)
+},4000)
+}
+function music(){
+let c=new AudioContext(),notes=[523,523,587,523,698,659,523,523,587,523,783,698,523,523,1046,880,698,659,587,932,932,880,698,783,698];
+function loop(){let t=c.currentTime;notes.forEach((n,i)=>{let o=c.createOscillator(),g=c.createGain();o.type="triangle";o.frequency.value=n;g.gain.setValueAtTime(.07,t+i*.4);g.gain.exponentialRampToValueAtTime(.001,t+i*.4+.35);o.connect(g);g.connect(c.destination);o.start(t+i*.4);o.stop(t+i*.4+.35)});setTimeout(loop,notes.length*400+800)}
+loop()
+}
+</script>
+</body>
+</html>
